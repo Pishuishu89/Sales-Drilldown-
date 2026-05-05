@@ -23,22 +23,22 @@ Sales-Drilldown/
 
 ## The Dataset
 
-38,000 rows across 6 brands, 13 customers, and 5 years (2022–2026). Each brand maps to a real CPG product category with its own cleaning logic:
+38,000 rows across 6 brands, 13 customers, and 5 years (2022–2026). Each brand has its own set of cleaning rules:
 
-| Brand | Logic |
-|-------|-------|
-| Brand A | Deodorant — roll-on vs stick, scented vs unscented |
-| Brand B | Skincare — UV vs Core, variations by patch/scrub/mask/strip |
-| Brand C | Self-tan — foam/drop/lotion/eraser/mitt, sun protection if body/face/lip |
-| Brand D | Body lotion — cleanser = Global, everything else = Essentials |
-| Brand E | Gradual tan — always Base type, variation driven by product format |
-| Brand F | Haircare — shampoo/conditioner/styler/serum/treatment, dirty sub-brand names in raw |
+| Brand | Type Logic | Variation Logic |
+|-------|-----------|-----------------|
+| Brand A | Determined by format keyword in item name | Scented vs unscented |
+| Brand B | Core if serum, treatment, or mixed product — otherwise UV | Driven by product format (patch, scrub, mask, strip, etc.) |
+| Brand C | Sun Protection if body, face, or lip — otherwise Self Tan | Driven by product format (foam, drop, lotion, eraser, mitt) |
+| Brand D | Global if cleanser — otherwise Essentials | Driven by product format (foot, face cream, moisturizer, etc.) |
+| Brand E | Always Base | Always Gradual unless item specifies mitt, towelette, instant, or hydra gel |
+| Brand F | Driven by product format (shampoo, conditioner, styler, serum, treatment) | Mirrors type, with Detox and Repair and Deep Sea as additional variants |
 
 Three intentional data quality issues the M code cleans:
 
 1. **Inconsistent casing** on Brand and Item (`BRAND A`, `brand a`, `Brand A` all in the same column)
 2. **Dirty Type and Variation columns** filled with garbage values (`TAN`, `body`, `REGULAR`, blanks) that get fully overwritten
-3. **Brand F sub-brand names** (`Gloss Blonde`, `Smooth Frizz`, etc.) that need to be consolidated to `Brand F`
+3. **Brand F sub-brand names** that need to be consolidated to a single brand label
 
 ---
 
@@ -249,7 +249,7 @@ in Output
 ## Dashboard
 
 ### Main Visuals
-![Dashboard](images/visuals.png)
+![Visuals](images/visuals.png)
 
 Line chart of units by month (2025 vs 2026), stacked bar by brand and year, pie by customer, and a 100% stacked bar showing brand mix per year.
 
